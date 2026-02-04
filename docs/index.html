@@ -28,13 +28,13 @@
             padding: 30px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
-            border: 2px solid #00d4ff;
+            border: 2px solid #F39C12;
         }
         h1 {
             font-size: 2.5em;
-            color: #00d4ff;
+            color: #ECF0F1;
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            text-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
         }
         .subtitle {
             font-size: 1.2em;
@@ -48,13 +48,13 @@
         }
         .card {
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid #00d4ff;
+            border: 1px solid #F39C12;
             border-radius: 10px;
             padding: 20px;
             backdrop-filter: blur(10px);
         }
         .card h2 {
-            color: #00d4ff;
+            color: #ECF0F1;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
@@ -63,14 +63,14 @@
             justify-content: space-between;
             margin: 10px 0;
             padding: 10px;
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(243, 156, 18, 0.1);
             border-radius: 5px;
         }
         .metric-label {
             font-weight: bold;
         }
         .metric-value {
-            color: #00ff88;
+            color: #F39C12;
             font-weight: bold;
         }
         .status {
@@ -90,23 +90,39 @@
         }
         .chart-container {
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid #00d4ff;
+            border: 1px solid #F39C12;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
+        }
+        .live-data-feed {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid #E74C3C;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .live-data-feed h2 {
+            color: #E74C3C;
+            margin-bottom: 10px;
+        }
+        .live-data-feed p {
+            font-size: 1.5em;
+            margin-bottom: 5px;
         }
         .footer {
             text-align: center;
             margin-top: 40px;
             padding: 20px;
-            border-top: 1px solid #00d4ff;
+            border-top: 1px solid #F39C12;
             color: #b0b0b0;
         }
         .council-signature {
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(243, 156, 18, 0.1);
             padding: 10px;
             margin: 5px 0;
-            border-left: 3px solid #00d4ff;
+            border-left: 3px solid #F39C12;
             border-radius: 3px;
         }
     </style>
@@ -192,6 +208,11 @@
         <div class="chart-container">
             <h2 style="color: #00d4ff; margin-bottom: 20px;">📈 Simulation Results Overview</h2>
             <div id="performanceChart"></div>
+            <div class="live-data-feed">
+                <h2>📡 Live Pressure Feed</h2>
+                <p>Current Pressure: <span id="livePressure" class="metric-value">152.8 pPa</span></p>
+                <p>Status: <span id="liveStatus" class="status pass">Nominal</span></p>
+            </div>
         </div>
 
         <div class="footer">
@@ -207,20 +228,34 @@
             x: ['Sensitivity', 'SNR', 'Drift Tolerance', 'Stability'],
             y: [100, 95, 100, 98],
             type: 'bar',
-            marker: {color: '#00d4ff'}
+            marker: {color: '#F39C12'}
         }];
 
         const layout = {
             title: 'Performance Metrics (% of Target)',
-            xaxis: {title: 'Metric'},
-            yaxis: {title: 'Achievement %'},
+            xaxis: {title: 'Metric', tickfont: {color: '#ECF0F1'}},
+            yaxis: {title: 'Achievement %', tickfont: {color: '#ECF0F1'}},
             plot_bgcolor: 'rgba(0, 0, 0, 0)',
             paper_bgcolor: 'rgba(0, 0, 0, 0)',
-            font: {color: '#e0e0e0'},
-            margin: {b: 100}
+            font: {color: '#ECF0F1'},
+            margin: {b: 100},
+            hovermode: 'closest'
         };
 
         Plotly.newPlot('performanceChart', data, layout, {responsive: true});
+
+        // Simulate live data feed
+        let currentPressure = 152.8;
+        let direction = 1;
+        setInterval(() => {
+            currentPressure += (Math.random() - 0.5) * 5 * direction;
+            if (currentPressure > 160 || currentPressure < 140) {
+                direction *= -1;
+            }
+            document.getElementById('livePressure').innerText = currentPressure.toFixed(2) + ' pPa';
+            document.getElementById('liveStatus').innerText = 'Nominal';
+            document.getElementById('liveStatus').className = 'status pass';
+        }, 2000);
     </script>
 </body>
 </html>
